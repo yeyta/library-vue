@@ -1,26 +1,48 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <div id="app">
+        <router-view></router-view>
+    </div>
 </template>
 
-<script>
-import HelloWorld from './components/HelloWorld.vue'
+<script setup>
+import {onMounted} from 'vue';
 
-export default {
-  name: 'App',
-  components: {
-    HelloWorld
-  }
-}
+// PC适配
+const bodyScal = () => {
+    let devicewidth = document.documentElement.clientWidth; //获取当前分辨率下的可是区域宽度
+    let widthScale = devicewidth / 1707; // 分母——设计稿的尺寸
+    document.body.style.zoom = widthScale * 0.894; //放大缩小相应倍数
+    let heightScale = document.documentElement.clientHeight;
+    document.body.style.height = heightScale;
+};
+
+onMounted(() => {
+	bodyScal()
+})
 </script>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+<style lang="scss">
+* {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+    font-family: "Arial", "Microsoft YaHei", "黑体", "宋体", sans-serif;
+}
+
+html,
+body {
+    padding-right: 0;
+    overflow-x: hidden;
+}
+body::-webkit-scrollbar {
+    display: none;
+}
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+ul {
+    list-style: none;
 }
 </style>
