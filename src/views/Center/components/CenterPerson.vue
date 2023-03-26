@@ -128,10 +128,8 @@ const chartState = reactive({
                 },
                 // 去掉指示线和label
                 label: {
-                    normal: {
-                        position: "inner",
-                        show: false,
-                    },
+                    position: "inner",
+                    show: false,
                 },
                 data: [
                     { value: 40, name: "校园" },

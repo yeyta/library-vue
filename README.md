@@ -106,6 +106,20 @@ npm install echarts --save
 
 
 
+### vue-calendar-component
+
+vue日历组件
+
+```
+npm i vue-calendar-component --save
+```
+
+
+
+
+
+
+
 
 
 ## 三、页面结构

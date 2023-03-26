@@ -55,10 +55,10 @@ import {
     ChatLineSquare,
 } from "@element-plus/icons-vue";
 const handleOpen = (key, keyPath) => {
-    console.log(key, keyPath);
+    // console.log(key, keyPath);
 };
 const handleClose = (key, keyPath) => {
-    console.log(key, keyPath);
+    // console.log(key, keyPath);
 };
 </script>
 
