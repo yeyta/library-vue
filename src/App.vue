@@ -5,7 +5,7 @@
 </template>
 
 <script setup>
-import {onMounted} from 'vue';
+import { onMounted } from "vue";
 
 // PC适配
 const bodyScal = () => {
@@ -17,8 +17,8 @@ const bodyScal = () => {
 };
 
 onMounted(() => {
-	bodyScal()
-})
+    bodyScal();
+});
 </script>
 
 <style lang="scss">
@@ -31,9 +31,9 @@ onMounted(() => {
 
 html,
 body {
-    padding-right: 0;
     overflow-x: hidden;
 }
+
 body::-webkit-scrollbar {
     display: none;
 }
@@ -44,5 +44,26 @@ a {
 
 ul {
     list-style: none;
+}
+
+// 消除滚动条
+::-webkit-scrollbar {
+    width: 0;
+}
+
+::-moz-scrollbar {
+    width: 0;
+}
+
+::-o-scrollbar {
+    width: 0;
+}
+
+::-ms-scrollbar {
+    width: 0;
+}
+
+scrollbar {
+    width: 0;
 }
 </style>

@@ -7,39 +7,16 @@
                 @open="handleOpen"
                 @close="handleClose"
             >
-                <el-menu-item index="1">
+                <el-menu-item
+                    v-for="item in menuState.menu"
+                    :key="item.id"
+                    :index="item.id"
+                    @click="handleClickMenu(item.name)"
+                >
                     <el-icon>
-                        <House />
+                        <component :is="item.icon" />
                     </el-icon>
-                    <span>首页</span>
-                </el-menu-item>
-
-                <el-menu-item index="2">
-                    <el-icon>
-                        <User />
-                    </el-icon>
-                    <span>学生管理</span>
-                </el-menu-item>
-
-                <el-menu-item index="3">
-                    <el-icon>
-                        <Notebook />
-                    </el-icon>
-                    <span>图书管理</span>
-                </el-menu-item>
-
-                <el-menu-item index="4">
-                    <el-icon>
-                        <DocumentChecked />
-                    </el-icon>
-                    <span>借阅管理</span>
-                </el-menu-item>
-
-                <el-menu-item index="5">
-                    <el-icon>
-                        <ChatLineSquare />
-                    </el-icon>
-                    <span>公告管理</span>
+                    <span>{{item.label}}</span>
                 </el-menu-item>
             </el-menu>
         </div>
@@ -47,6 +24,8 @@
 </template>
 
 <script setup>
+import { reactive, shallowRef } from "vue";
+import { useRouter, useRoute } from "vue-router";
 import {
     House,
     User,
@@ -54,6 +33,52 @@ import {
     DocumentChecked,
     ChatLineSquare,
 } from "@element-plus/icons-vue";
+
+// 路由
+const router = useRouter();
+
+// 菜单项
+// 响应组件中有数据是组件component
+// 解决方法：使用shallowRef
+const menuState = reactive({
+    menu: [
+        {
+            id: "1",
+            icon: shallowRef(House),
+            label: "首页",
+            name: "center",
+        },
+        {
+            id: "2",
+            icon: shallowRef(User),
+            label: "学生管理",
+            name: "student",
+        },
+        {
+            id: "3",
+            icon: shallowRef(Notebook),
+            label: "图书管理",
+            name: "book",
+        },
+        {
+            id: "4",
+            icon: shallowRef(DocumentChecked),
+            label: "借阅管理",
+            name: "borrow",
+        },
+        {
+            id: "5",
+            icon: shallowRef(ChatLineSquare),
+            label: "公告管理",
+            name: "notice",
+        },
+    ],
+});
+
+const handleClickMenu = (urlName) => {
+    router.push({ name: `${urlName}` });
+};
+
 const handleOpen = (key, keyPath) => {
     // console.log(key, keyPath);
 };
@@ -69,7 +94,7 @@ const handleClose = (key, keyPath) => {
         .el-menu-item {
             user-select: none;
             color: #606266;
-			border-bottom: 1px solid rgba($color: #ffc7c7, $alpha: 0.8);
+            border-bottom: 1px solid rgba($color: #ffc7c7, $alpha: 0.8);
             &:hover {
                 background-color: #ffc7c7;
             }
