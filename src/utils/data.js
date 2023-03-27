@@ -118,3 +118,98 @@ export const typeGetOne = (id) => {
 		method: 'get'
 	})
 }
+
+
+// 借阅信息
+export const borrowGet = () => {
+	return axios({
+		url: '/api/borrows/?populate=student,book',
+		method: 'get'
+	})
+}
+
+export const borrowAdd = (params) => {
+	return axios({
+		url: '/api/borrows/?populate=student,book',
+		method: 'post',
+		data: {
+			data: {
+				borrow_date: params.borrow_date,
+				back_date: params.back_date,
+				isback: params.isback,
+				student: {
+					id: params.student,
+				},
+				book: {
+					id: params.book,
+				}
+			}
+		}
+	})
+}
+
+export const borrowEdit = (id, params) => {
+	return axios({
+		url: `/api/borrows/${id}`,
+		method: 'put',
+		data: {
+			data: {
+				borrow_date: params.borrow_date,
+				back_date: params.back_date,
+				isback: params.isback,
+			}
+		}
+	})
+}
+
+export const borrowDel = (id) => {
+	return axios({
+		url: `/api/borrows/${id}`,
+		method: 'delete',
+	})
+}
+
+// 公告
+export const bulletinGet = () => {
+	return axios({
+		url: '/api/bulletins',
+		method: 'get'
+	})
+}
+
+export const bulletinAdd = (params) => {
+	return axios({
+		url: '/api/bulletins',
+		method: 'post',
+		data: {
+			data: {
+				title: params.title,
+				bull_date: params.bull_date,
+				content: params.content,
+				publisher: params.publisher,
+			}
+		}
+	})
+}
+
+export const bulletinEdit = (id, params) => {
+	return axios({
+		url: `/api/bulletins/${id}`,
+		method: 'put',
+		data: {
+			data: {
+				title: params.title,
+				bull_date: params.bull_date,
+				content: params.content,
+				publisher: params.publisher,
+			}
+		}
+	})
+}
+
+export const bulletinDel = (id) => {
+	return axios({
+		url: `/api/bulletins/${id}`,
+		method: 'delete',
+	})
+}
