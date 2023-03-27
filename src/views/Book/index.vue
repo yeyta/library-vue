@@ -8,7 +8,45 @@
                 width="30%"
                 :before-close="addHandleClose"
             >
-                <span>This is a message</span>
+                <el-form
+                    label-position="left"
+                    label-width="100px"
+                    :model="formState.addFormData"
+                    style="max-width: 500px"
+                >
+                    <el-form-item label="图书名称">
+                        <el-input v-model="formState.addFormData.book_name" />
+                    </el-form-item>
+                    <el-form-item label="书架号">
+                        <el-input v-model="formState.addFormData.bookshelf" />
+                    </el-form-item>
+                    <el-form-item label="出版社">
+                        <el-input v-model="formState.addFormData.press" />
+                    </el-form-item>
+                    <el-form-item label="作者">
+                        <el-input v-model="formState.addFormData.author" />
+                    </el-form-item>
+                    <el-form-item label="价格">
+                        <el-input v-model="formState.addFormData.price" />
+                    </el-form-item>
+                    <el-form-item label="库存">
+                        <el-input v-model="formState.addFormData.stock" />
+                    </el-form-item>
+                    <el-form-item label="类别">
+                        <el-select
+                            v-model="formState.addFormData.type"
+                            class="m-2"
+                            placeholder="选择类别"
+                        >
+                            <el-option
+                                v-for="item in typeState.typeData"
+                                :key="item.id"
+                                :label="item.type_name"
+                                :value="item.id"
+                            />
+                        </el-select>
+                    </el-form-item>
+                </el-form>
                 <template #footer>
                     <span class="dialog-footer">
                         <el-button @click="addHandleCancel">取消</el-button>
@@ -24,7 +62,45 @@
                 width="30%"
                 :before-close="editHandleClose"
             >
-                <span>This is a message</span>
+                <el-form
+                    label-position="left"
+                    label-width="100px"
+                    :model="formState.editFormData"
+                    style="max-width: 500px"
+                >
+                    <el-form-item label="图书名称">
+                        <el-input v-model="formState.editFormData.book_name" />
+                    </el-form-item>
+                    <el-form-item label="书架号">
+                        <el-input v-model="formState.editFormData.bookshelf" />
+                    </el-form-item>
+                    <el-form-item label="出版社">
+                        <el-input v-model="formState.editFormData.press" />
+                    </el-form-item>
+                    <el-form-item label="作者">
+                        <el-input v-model="formState.editFormData.author" />
+                    </el-form-item>
+                    <el-form-item label="价格">
+                        <el-input v-model="formState.editFormData.price" />
+                    </el-form-item>
+                    <el-form-item label="库存">
+                        <el-input v-model="formState.editFormData.stock" />
+                    </el-form-item>
+                    <el-form-item label="类别">
+                        <el-select
+                            v-model="formState.editFormData.type"
+                            class="m-2"
+                            placeholder="选择类别"
+                        >
+                            <el-option
+                                v-for="item in typeState.typeData"
+                                :key="item.id"
+                                :label="item.type_name"
+                                :value="item.type_name"
+                            />
+                        </el-select>
+                    </el-form-item>
+                </el-form>
                 <template #footer>
                     <span class="dialog-footer">
                         <el-button @click="editHandleCancel">取消</el-button>
@@ -39,15 +115,22 @@
                         <el-button plain @click="handleAdd">添加数据</el-button>
                     </div>
                     <div class="right">
-                        <el-input v-model="inpState.searchWord" placeholder="请输入关键词" />
-                        <el-button color="#FFC7C7" plain>搜索数据</el-button>
+                        <el-input v-model="inpState.searchWord" placeholder="请输入图书关键词" />
+                        <el-button color="#FFC7C7" plain @click="handleSearch">搜索数据</el-button>
+                        <el-button color="#FFC7C7" plain @click="handleSearchReset">重置</el-button>
                     </div>
                 </div>
                 <div class="bottom">
                     <!-- 表格 -->
                     <el-table :data="tableState.tableData" style="width: 100%" height="725">
-                        <el-table-column fixed prop="id" label="id" width="150" />
-                        <el-table-column prop="name" label="姓名" />
+                        <el-table-column fixed prop="id" label="id" width="100" />
+                        <el-table-column prop="book_name" label="图书名称" width="200" />
+                        <el-table-column prop="bookshelf" label="书架号" width="100" />
+                        <el-table-column prop="press" label="出版社" width="150" />
+                        <el-table-column prop="author" label="作者" width="120" />
+                        <el-table-column prop="price" label="价格" width="100" />
+                        <el-table-column prop="stock" label="库存" width="70" />
+                        <el-table-column prop="type" label="类别" width="80" />
                         <el-table-column fixed="right" label="操作" width="120">
                             <template v-slot="scope">
                                 <el-button link type="primary" @click="handleEdit(scope.row)">编辑</el-button>
@@ -72,24 +155,86 @@
 
 <script setup>
 import { reactive, onMounted } from "vue";
-import { ElMessageBox } from "element-plus";
+import { ElMessageBox, ElMessage } from "element-plus";
+import {
+    bookGet,
+    bookAdd,
+    bookEdit,
+    bookDel,
+    typeGet,
+    typeGetOne,
+} from "@/utils/data";
+
+onMounted(() => {
+    tableInit();
+    typeInit();
+});
 
 const tableState = reactive({
+    curItemId: "",
     tableData: [
         {
             id: "1",
-            name: "test1",
-        },
-        {
-            id: "2",
-            name: "test2",
+            book_name: "test",
+            bookshelf: "1",
+            press: "testpress",
+            author: "testauthor",
+            price: "122",
+            stock: "12",
+            type: "旅游",
         },
     ],
 });
 
-onMounted(() => {
-    // axios拿取后台api
+const typeState = reactive({
+    typeData: [],
 });
+
+// 获取types
+const typeInit = () => {
+    typeGet().then(
+        (response) => {
+            const resTemp = response.data.data;
+            typeState.typeData.splice(0, typeState.typeData.length);
+            resTemp.forEach((item) => {
+                const typeTemp = {
+                    id: item.id,
+                    type_name: item.attributes.type_name,
+                };
+                typeState.typeData.push(typeTemp);
+            });
+            // console.log(typeState.typeData)
+        },
+        (error) => {
+            console.log(error);
+        }
+    );
+};
+
+// 获取books
+const tableInit = () => {
+    bookGet().then(
+        (response) => {
+            const resTemp = response.data.data;
+            // 清空
+            tableState.tableData.splice(0, tableState.tableData.length);
+            resTemp.forEach((item) => {
+                const tableTemp = {
+                    id: item.id,
+                    book_name: item.attributes.book_name,
+                    bookshelf: item.attributes.bookshelf,
+                    press: item.attributes.press,
+                    author: item.attributes.author,
+                    price: item.attributes.price,
+                    stock: item.attributes.stock,
+                    type: item.attributes.type.data.attributes.type_name,
+                };
+                tableState.tableData.push(tableTemp);
+            });
+        },
+        (error) => {}
+    );
+};
 
 // 对话框
 const dialogState = reactive({
@@ -97,32 +242,121 @@ const dialogState = reactive({
     editDialogVisible: false,
 });
 
-// add 对话框
+// 表单
+const formState = reactive({
+    addFormData: {
+        book_name: "",
+        bookshelf: "",
+        press: "",
+        author: "",
+        price: "",
+        stock: "",
+        type: "",
+    },
+    editFormData: {
+        book_name: "",
+        bookshelf: "",
+        press: "",
+        author: "",
+        price: "",
+        stock: "",
+        type: "",
+    },
+});
+
+// add 对话框确认取消
 const addHandleCancel = () => {
     dialogState.addDialogVisible = false;
+    // 清空表单
+    Object.keys(formState.addFormData).forEach(
+        (key) => (formState.addFormData[key] = "")
+    );
 };
 const addHandleConfirm = () => {
+    // 确认添加的数据
+    const addDataTemp = {
+        book_name: formState.addFormData.book_name,
+        bookshelf: formState.addFormData.bookshelf,
+        press: formState.addFormData.press,
+        author: formState.addFormData.author,
+        price: formState.addFormData.price,
+        stock: formState.addFormData.stock,
+        type: formState.addFormData.type,
+    };
+    bookAdd(addDataTemp).then(
+        (response) => {
+            ElMessage({
+                message: "添加成功",
+                type: "success",
+            });
+            tableInit();
+        },
+        (error) => {
+            ElMessage.error("添加失败");
+        }
+    );
+
     dialogState.addDialogVisible = false;
+
+    // 清空表单
+    Object.keys(formState.addFormData).forEach(
+        (key) => (formState.addFormData[key] = "")
+    );
 };
 
-// edit 对话框
+// edit 对话框确认取消
 const editHandleCancel = () => {
     dialogState.editDialogVisible = false;
 };
 const editHandleConfirm = () => {
+    // 确认修改的数据
+    const editDataTemp = {
+        book_name: formState.editFormData.book_name,
+        bookshelf: formState.editFormData.bookshelf,
+        press: formState.editFormData.press,
+        author: formState.editFormData.author,
+        price: formState.editFormData.price,
+        stock: formState.editFormData.stock,
+        type: formState.editFormData.type,
+    };
+
+    typeState.typeData.forEach((item) => {
+        if (editDataTemp.type === item.type_name) {
+            editDataTemp.type = item.id;
+        }
+    });
+
+
+    bookEdit(tableState.curItemId, editDataTemp).then(
+        (response) => {
+            ElMessage({
+                message: "编辑成功",
+                type: "success",
+            });
+            tableInit();
+        },
+        (error) => {
+            ElMessage.error("编辑失败");
+        }
+    );
+
     dialogState.editDialogVisible = false;
 };
 
 // 对话框意外关闭
 const addHandleClose = (done) => {
-    ElMessageBox.confirm("Are you sure to close this dialog?")
+    ElMessageBox.confirm("确认关闭表单吗?")
         .then(() => {
+            // 清空表单
+            Object.keys(formState.addFormData).forEach(
+                (key) => (formState.addFormData[key] = "")
+            );
             done();
         })
         .catch(() => {});
 };
 const editHandleClose = (done) => {
-    ElMessageBox.confirm("Are you sure to close this dialog?")
+    ElMessageBox.confirm("确认关闭表单吗?")
         .then(() => {
             done();
         })
@@ -139,22 +373,59 @@ const inpState = reactive({
     searchWord: "",
 });
 
+const handleSearch = () => {
+    let tempData = [];
+    tableState.tableData.forEach((item) => {
+        if (item.book_name.indexOf(inpState.searchWord) != -1) {
+            tempData.push(item);
+        }
+    });
+    tableState.tableData = tempData;
+};
+
+const handleSearchReset = () => {
+    inpState.searchWord = "";
+    tableInit();
+};
+
 // 编辑
 const handleEdit = (row) => {
-    console.log(row);
+    formState.editFormData = {
+        book_name: row.book_name,
+        bookshelf: row.bookshelf,
+        press: row.press,
+        author: row.author,
+        price: row.price,
+        stock: row.stock,
+        type: row.type,
+    };
+    tableState.curItemId = row.id;
     dialogState.editDialogVisible = true;
 };
 
 // 删除
 const handleDelete = (row) => {
-    console.log(row);
+    ElMessageBox.confirm(`确认删除${row.book_name}吗?`)
+        .then(() => {
+            bookDel(row.id).then(
+                (response) => {
+                    ElMessage({
+                        message: "删除成功",
+                        type: "success",
+                    });
+                    tableInit();
+                },
+                (error) => {
+                    ElMessage.error("删除失败");
+                }
+            );
+            done();
+        })
+        .catch(() => {});
 };
 </script>
 
 <style lang="scss" scoped>
-.book-wrap {
-}
-
 .book-content {
     height: 820px;
     padding: 10px;

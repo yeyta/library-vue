@@ -1,6 +1,6 @@
 import axios from "./request";
 
-// 获取学生all
+// 学生
 export const studentGet = () => {
 	return axios({
 		url: '/api/students',
@@ -8,7 +8,6 @@ export const studentGet = () => {
 	})
 }
 
-// 添加学生
 export const studentAdd = (params) => {
 	return axios({
 		url: '/api/students',
@@ -26,7 +25,6 @@ export const studentAdd = (params) => {
 	})
 }
 
-// 编辑学生
 export const studentEdit = (id, params) => {
 	return axios({
 		url: `/api/students/${id}`,
@@ -43,10 +41,80 @@ export const studentEdit = (id, params) => {
 	})
 }
 
-// 删除学生
 export const studentDel = (id) => {
 	return axios({
 		url: `/api/students/${id}`,
 		method: 'delete',
+	})
+}
+
+// 图书
+export const bookGet = () => {
+	return axios({
+		url: '/api/books/?populate=type',
+		method: 'get'
+	})
+}
+
+export const bookAdd = (params) => {
+	return axios({
+		url: '/api/books/?populate=type',
+		method: 'post',
+		data: {
+			data: {
+				book_name: params.book_name,
+				bookshelf: params.bookshelf,
+				press: params.press,
+				author: params.author,
+				price: params.price,
+				stock: params.stock,
+				type: {
+					id: params.type,
+				}
+			}
+		}
+	})
+}
+
+export const bookEdit = (id, params) => {
+	return axios({
+		url: `/api/books/${id}`,
+		method: 'put',
+		data: {
+			data: {
+				book_name: params.book_name,
+				bookshelf: params.bookshelf,
+				press: params.press,
+				author: params.author,
+				price: params.price,
+				stock: params.stock,
+				type: {
+					id: params.type,
+				}
+			}
+		}
+	})
+}
+
+export const bookDel = (id) => {
+	return axios({
+		url: `/api/books/${id}`,
+		method: 'delete',
+	})
+}
+
+
+// 获取type
+export const typeGet = () => {
+	return axios({
+		url: '/api/types',
+		method: 'get'
+	})
+}
+// 获取type one
+export const typeGetOne = (id) => {
+	return axios({
+		url: `/api/types/${id}`,
+		method: 'get'
 	})
 }
