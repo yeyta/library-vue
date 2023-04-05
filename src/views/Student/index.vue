@@ -107,8 +107,10 @@
             </div>
             <div class="chart">
                 <div class="top">
-                    <div class="chart1"></div>
-                    <div class="chart2"></div>
+                    <div class="chart1">
+                        <bar-charts/>
+                    </div>
+                   
                 </div>
                 <div class="bottom">
                     <div class="chart3"></div>
@@ -122,6 +124,8 @@
 import { reactive, onMounted } from "vue";
 import { ElMessageBox, ElMessage } from "element-plus";
 import { studentGet, studentAdd, studentEdit, studentDel } from "@/utils/data";
+import BarCharts from'./components/BarCharts.vue';
+
 
 const tableState = reactive({
     curItemId: "",
